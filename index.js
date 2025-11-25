@@ -5,10 +5,24 @@ const pool = require("./database/pool");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mysql2 = require('mysql2/promise');
+require('dotenv').config();
 
 app.use(cors());
 app.use(express.json());
 dotenv.config();
+
+const pool = mysql2.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
 
 function authMiddleware(req, res, next) {
   try {
@@ -37,7 +51,7 @@ function authMiddleware(req, res, next) {
   }
 }
 
-app.post("api/auth/register", async (req, res) => {
+app.post("/auth/register", async (req, res) => {
   try {
     const { username, password, fullname, address, phone, email } = req.body;
 
@@ -68,7 +82,7 @@ app.post("api/auth/register", async (req, res) => {
   }
 });
 
-app.post("api/auth/login", async (req, res) => {
+app.post("/auth/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -105,7 +119,7 @@ app.post("api/auth/login", async (req, res) => {
   }
 });
 
-app.get("api/customers", authMiddleware, async (req, res) => {
+app.get("/customers", authMiddleware, async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT id, username, fullname, address, phone, email, created_at FROM tbl_customers"
@@ -118,7 +132,7 @@ app.get("api/customers", authMiddleware, async (req, res) => {
   }
 });
 
-app.get("api/menus", async (req, res) => {
+app.get("/menus", async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT 
@@ -144,7 +158,7 @@ app.get("api/menus", async (req, res) => {
   }
 });
 
-app.post("api/orders", authMiddleware, async (req, res) => {
+app.post("/orders", authMiddleware, async (req, res) => {
   try {
     const { menu_id, quantity } = req.body;
 
@@ -194,7 +208,7 @@ app.post("api/orders", authMiddleware, async (req, res) => {
   }
 });
 
-app.get("api/orders/summary", authMiddleware, async (req, res) => {
+app.get("/orders/summary", authMiddleware, async (req, res) => {
   try {
     const customer_id = req.user.id;
 
@@ -231,11 +245,7 @@ app.listen(PORT, (req, res) => {
   console.log("Backend is running on port : " + PORT);
 });
 
-app.get("/", (req, res) => {
-  res.send("Backend is running on port : " + PORT);
-});
-
-app.get("api/ping", async (req, res) => {
+app.get("/ping", async (req, res) => {
   const time = await pool.query("SELECT NOW() AS time");
   res.json({ status: "ok", time: time[0] });
 });
