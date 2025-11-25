@@ -9,7 +9,6 @@ require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
-dotenv.config();
 
 const pool = mysql2.createPool({
   host: process.env.DB_HOST,
@@ -237,11 +236,6 @@ app.get("/orders/summary", authMiddleware, async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT;
-
-app.listen(PORT, () => {
-  console.log("Backend is running on port : " + PORT);
-});
 
 app.get("/ping", async (req, res) => {
   const time = await pool.query("SELECT NOW() AS time");
