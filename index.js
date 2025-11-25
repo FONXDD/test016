@@ -1,28 +1,26 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-const pool = require("./database/pool");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const mysql2 = require('mysql2/promise');
-require('dotenv').config();
+const mysql2 = require("mysql2/promise");
+require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
 dotenv.config();
 
 const pool = mysql2.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
-
 
 function authMiddleware(req, res, next) {
   try {
@@ -241,7 +239,7 @@ app.get("/orders/summary", authMiddleware, async (req, res) => {
 
 const PORT = process.env.PORT;
 
-app.listen(PORT, (req, res) => {
+app.listen(PORT, () => {
   console.log("Backend is running on port : " + PORT);
 });
 
@@ -249,3 +247,5 @@ app.get("/ping", async (req, res) => {
   const time = await pool.query("SELECT NOW() AS time");
   res.json({ status: "ok", time: time[0] });
 });
+
+module.exports = app;

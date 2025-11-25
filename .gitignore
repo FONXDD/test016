@@ -1,0 +1,48 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build / Output
+dist/
+build/
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE / Editor folders
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Optional lock files (ถ้าไม่ต้องการ commit)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# GitLab / CI cache
+.gitlab/
+.cache/
