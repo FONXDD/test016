@@ -1,10 +1,9 @@
 const express = require("express");
 const app = express();
-const dotenv = require("dotenv");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const mysql2 = require("mysql2/promise");
+const mysql = require("mysql2/promise");
 require("dotenv").config();
 
 app.use(cors());
