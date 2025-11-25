@@ -233,6 +233,15 @@ app.get("/orders/summary", authMiddleware, async (req, res) => {
 });
 
 const PORT = process.env.PORT;
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+
+app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
+
+app.get("/", (req, res) => res.send(`Server running on port : ${PORT}`));
+
+app.get("/ping", async (req, res) => {
+  const time = await pool.query("SELECT now() AS now");
+  return res.json({
+    message: "ok",
+    time: time[0],
+  });
+});
